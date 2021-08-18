@@ -17,14 +17,14 @@ use_cuda: True # Use gpu by default unless it isn't available
 buffer_cpu_only: True # If true we won't keep all of the replay buffer in vram
 
 # --- Logging options ---
-use_tensorboard: False # Log results to tensorboard
-save_model: False # Save the models to disk
-save_model_interval: 2000000 # Save models after this many timesteps
-checkpoint_path: "" # Load a checkpoint from this path
+use_tensorboard: True # Log results to tensorboard
+save_model: True # Save the models to disk
+save_model_interval: 800000 # Save models after this many timesteps
+checkpoint_path: "" # "/ws_data/sc2/checkpoints" # Load a checkpoint from this path
 evaluate: False # Evaluate model for test_nepisode episodes and quit (no training)
 load_step: 0 # Load model trained on this many timesteps (0 if choose max possible)
 save_replay: False # Saving the replay of the model loaded from checkpoint_path
-local_results_path: "results" # Path for local results
+local_results_path: "/results" # Path for local results
 
 # --- RL hyperparameters ---
 gamma: 0.99
@@ -45,3 +45,5 @@ obs_last_action: True # Include the agent's last action (one_hot) in the observa
 # --- Experiment running params ---
 repeat_id: 1
 label: "default_label"
+
+optimizer: "RMSProp"

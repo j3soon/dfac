@@ -19,14 +19,22 @@ class BasicMAC:
     def select_actions(self, ep_batch, t_ep, t_env, bs=slice(None), test_mode=False):
         # Only select actions for the selected batch elements in bs
         avail_actions = ep_batch["avail_actions"][:, t_ep]
-        agent_outputs = self.forward(ep_batch, t_ep, test_mode=test_mode)
+        if self.args.agent == "iqn_rnn":
+            agent_outputs, rnd_quantiles = self.forward(ep_batch, t_ep, forward_type="approx")
+        else:
+            agent_outputs = self.forward(ep_batch, t_ep, forward_type=test_mode)
+        if self.args.agent == "iqn_rnn":
+            agent_outputs = agent_outputs.view(ep_batch.batch_size, self.n_agents, self.args.n_actions, -1).mean(dim=3)
         chosen_actions = self.action_selector.select_action(agent_outputs[bs], avail_actions[bs], t_env, test_mode=test_mode)
         return chosen_actions
 
-    def forward(self, ep_batch, t, test_mode=False):
+    def forward(self, ep_batch, t, forward_type=None):
         agent_inputs = self._build_inputs(ep_batch, t)
         avail_actions = ep_batch["avail_actions"][:, t]
-        agent_outs, self.hidden_states = self.agent(agent_inputs, self.hidden_states)
+        if self.args.agent == "iqn_rnn":
+            agent_outs, self.hidden_states, rnd_quantiles = self.agent(agent_inputs, self.hidden_states, forward_type=forward_type)
+        else:
+            agent_outs, self.hidden_states = self.agent(agent_inputs, self.hidden_states)
 
         # Softmax the agent outputs if they're policy logits
         if self.agent_output_type == "pi_logits":
@@ -37,7 +45,7 @@ class BasicMAC:
                 agent_outs[reshaped_avail_actions == 0] = -1e10
 
             agent_outs = th.nn.functional.softmax(agent_outs, dim=-1)
-            if not test_mode:
+            if not forward_type:
                 # Epsilon floor
                 epsilon_action_num = agent_outs.size(-1)
                 if getattr(self.args, "mask_before_softmax", True):
@@ -50,8 +58,10 @@ class BasicMAC:
                 if getattr(self.args, "mask_before_softmax", True):
                     # Zero out the unavailable actions
                     agent_outs[reshaped_avail_actions == 0] = 0.0
-
-        return agent_outs.view(ep_batch.batch_size, self.n_agents, -1)
+        if self.args.agent == "iqn_rnn":
+            return agent_outs, rnd_quantiles
+        else:
+            return agent_outs.view(ep_batch.batch_size, self.n_agents, -1)
 
     def init_hidden(self, batch_size):
         self.hidden_states = self.agent.init_hidden().unsqueeze(0).expand(batch_size, self.n_agents, -1)  # bav

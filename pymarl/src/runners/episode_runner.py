@@ -65,12 +65,13 @@ class EpisodeRunner:
             # Pass the entire batch of experiences up till now to the agents
             # Receive the actions for each agent at this timestep in a batch of size 1
             actions = self.mac.select_actions(self.batch, t_ep=self.t, t_env=self.t_env, test_mode=test_mode)
+            detached_actions = actions.detach()
 
-            reward, terminated, env_info = self.env.step(actions[0])
+            reward, terminated, env_info = self.env.step(detached_actions[0])
             episode_return += reward
 
             post_transition_data = {
-                "actions": actions,
+                "actions": detached_actions,
                 "reward": [(reward,)],
                 "terminated": [(terminated != env_info.get("episode_limit", False),)],
             }
@@ -88,7 +89,8 @@ class EpisodeRunner:
 
         # Select actions in the last stored state
         actions = self.mac.select_actions(self.batch, t_ep=self.t, t_env=self.t_env, test_mode=test_mode)
-        self.batch.update({"actions": actions}, ts=self.t)
+        detached_actions = actions.detach()
+        self.batch.update({"actions": detached_actions}, ts=self.t)
 
         cur_stats = self.test_stats if test_mode else self.train_stats
         cur_returns = self.test_returns if test_mode else self.train_returns
@@ -103,6 +105,9 @@ class EpisodeRunner:
         cur_returns.append(episode_return)
 
         if test_mode and (len(self.test_returns) == self.args.test_nepisode):
+            if self.args.save_replay:
+                print("Replay mean total reward:", np.mean(cur_returns), flush=True)
+                print("Replay win rate:", cur_stats["battle_won"], flush=True)
             self._log(cur_returns, cur_stats, log_prefix)
         elif self.t_env - self.log_train_stats_t >= self.args.runner_log_interval:
             self._log(cur_returns, cur_stats, log_prefix)

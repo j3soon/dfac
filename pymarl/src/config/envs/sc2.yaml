@@ -33,8 +33,8 @@ env_args:
 
 test_greedy: True
 test_nepisode: 32
-test_interval: 10000
-log_interval: 10000
-runner_log_interval: 10000
-learner_log_interval: 10000
-t_max: 2050000
+test_interval: 40000
+log_interval: 40000
+runner_log_interval: 40000
+learner_log_interval: 40000
+t_max: 8200000

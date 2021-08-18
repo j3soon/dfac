@@ -4,6 +4,7 @@ from modules.mixers.vdn import VDNMixer
 from modules.mixers.qmix import QMixer
 import torch as th
 from torch.optim import RMSprop
+from torch.optim import Adam
 
 
 class QLearner:
@@ -27,7 +28,12 @@ class QLearner:
             self.params += list(self.mixer.parameters())
             self.target_mixer = copy.deepcopy(self.mixer)
 
-        self.optimiser = RMSprop(params=self.params, lr=args.lr, alpha=args.optim_alpha, eps=args.optim_eps)
+        if args.optimizer == "RMSProp":
+            self.optimiser = RMSprop(params=self.params, lr=args.lr, alpha=args.optim_alpha, eps=args.optim_eps)
+        elif args.optimizer == "Adam":
+            self.optimiser = Adam(params=self.params, lr=args.lr, eps=args.optim_eps)
+        else:
+            raise ValueError("Unknown Optimizer")
 
         # a little wasteful to deepcopy (e.g. duplicates action selector), but should work for any MAC
         self.target_mac = copy.deepcopy(mac)
@@ -108,7 +114,7 @@ class QLearner:
 
         if t_env - self.log_stats_t >= self.args.learner_log_interval:
             self.logger.log_stat("loss", loss.item(), t_env)
-            self.logger.log_stat("grad_norm", grad_norm, t_env)
+            self.logger.log_stat("grad_norm", grad_norm.item(), t_env)
             mask_elems = mask.sum().item()
             self.logger.log_stat("td_error_abs", (masked_td_error.abs().sum().item()/mask_elems), t_env)
             self.logger.log_stat("q_taken_mean", (chosen_action_qvals * mask).sum().item()/(mask_elems * self.args.n_agents), t_env)
