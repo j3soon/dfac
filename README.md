@@ -1,9 +1,15 @@
-# Distributional Value Factorization (DFAC) Framework
+# Distributional Value Function Factorization (DFAC) Framework
+
+[![arXiv](https://img.shields.io/badge/arXiv-2102.07936-b31b1b.svg)](https://arxiv.org/abs/2102.07936)<br>
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dfac-framework-factorizing-the-value-function/smac-on-smac-6h-vs-8z-1)](https://paperswithcode.com/sota/smac-on-smac-6h-vs-8z-1?p=dfac-framework-factorizing-the-value-function)<br>
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dfac-framework-factorizing-the-value-function/smac-on-smac-3s5z-vs-3s6z-1)](https://paperswithcode.com/sota/smac-on-smac-3s5z-vs-3s6z-1?p=dfac-framework-factorizing-the-value-function)<br>
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dfac-framework-factorizing-the-value-function/smac-on-smac-mmm2-1)](https://paperswithcode.com/sota/smac-on-smac-mmm2-1?p=dfac-framework-factorizing-the-value-function)<br>
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dfac-framework-factorizing-the-value-function/smac-on-smac-27m-vs-30m)](https://paperswithcode.com/sota/smac-on-smac-27m-vs-30m?p=dfac-framework-factorizing-the-value-function)<br>
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/dfac-framework-factorizing-the-value-function/smac-on-smac-corridor)](https://paperswithcode.com/sota/smac-on-smac-corridor?p=dfac-framework-factorizing-the-value-function)
 
 This is the official repository that contain the source code for the DFAC paper:
 
 - [[ICML 2021] DFAC Framework: Factorizing the Value Function via Quantile Mixture for Multi-Agent Distributional Q-Learning](http://proceedings.mlr.press/v139/sun21c.html)
-- The preprint version and further revisions can be found on [arXiv](https://arxiv.org/abs/2102.07936).
 
 If you have any question regarding the paper or code, ask by [submitting an issue](https://github.com/j3soon/dfac/issues).
 
