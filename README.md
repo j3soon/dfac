@@ -13,6 +13,8 @@ This is the official repository that contain the source code for the DFAC paper:
 
 If you have any question regarding the paper or code, ask by [submitting an issue](https://github.com/j3soon/dfac/issues).
 
+> An extended version of the paper has been published in the Journal of Machine Learning Research (JMLR) 2023. Please refer to the [dfac-extended](https://github.com/j3soon/dfac-extended) repository for more information.
+
 ## Gameplay Video Preview
 
 Learned policy of DDN on Super Hard & Ultra Hard maps:
@@ -21,7 +23,7 @@ https://youtu.be/MLdqyyPcv9U
 
 ## Installation
 
-Install docker, nvidia-docker, and nvidia-container-runtime. You can refer to [this document](https://abstractionrevealed.com/getting-started-with-python/#docker-containers) for installation instructions.
+Install docker, nvidia-docker, and nvidia-container-runtime. You can refer to [this document](https://j3soon.com/cheatsheets/getting-started-with-python/#docker-containers) for installation instructions.
 
 Execute the following commands in your Linux terminal to build the docker image:
 
